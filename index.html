@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Map & Stats</title>
+</head>
+<body>
+  <h2>Location Stats</h2>
+  <div id="stats">Loading...</div>
+
+  <h2>Locations</h2>
+  <ul id="location-list">Loading...</ul>
+
+  <script>
+    // Fetch stats
+    fetch('http://127.0.0.1:8000/api/stats/')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('stats').innerText =
+          `Total: ${data.total_locations}, Most Common: ${data.most_common_category}`;
+      });
+
+    // Fetch GeoJSON
+    fetch('http://127.0.0.1:8000/api/geojson/')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('location-list');
+        list.innerHTML = '';
+        data.features.forEach(feature => {
+          const li = document.createElement('li');
+          li.innerText = `${feature.properties.name} (${feature.properties.category})`;
+          list.appendChild(li);
+        });
+      });
+  </script>
+</body>
+</html>
